@@ -14,7 +14,7 @@ public class DAO<T> implements AutoCloseable {
 	
 	public DAO(Class<T> classe) {
 		this.classe = classe;
-		entityManagerFactory = Persistence.createEntityManagerFactory("pizzaria");
+		entityManagerFactory = Persistence.createEntityManagerFactory("agrosystem");
 		entityManager = entityManagerFactory.createEntityManager();
 	}//Construtor
 	
