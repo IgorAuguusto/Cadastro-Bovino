@@ -53,7 +53,6 @@ public class Bovino implements Serializable {
 	
 	public Bovino(String brinco, String nome, String situacao, String sexo, String brincoMae, String brincoPai,
 			String raca, String dataNascimento, String dataPrenhes, String dataUltimoParto) {
-		super();
 		this.brinco = brinco;
 		this.nome = nome;
 		this.situacao = Situacao.converterStringParaSituacao(situacao);

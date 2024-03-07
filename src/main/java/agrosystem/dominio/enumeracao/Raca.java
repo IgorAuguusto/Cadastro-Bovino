@@ -45,7 +45,7 @@ public enum Raca {
         for (Raca raca : racas) {
         	nomeRacas.add(raca.getRaca());
         }
-
+        nomeRacas.add("Todas");
         return nomeRacas.toArray(new String[0]);
     }//getRacas()
     

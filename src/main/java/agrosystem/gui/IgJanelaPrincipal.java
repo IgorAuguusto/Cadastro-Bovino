@@ -6,10 +6,12 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -20,14 +22,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 
 import agrosystem.dao.DAO;
 import agrosystem.dominio.Bovino;
 import agrosystem.dominio.enumeracao.Raca;
 import agrosystem.dominio.enumeracao.Sexo;
+import agrosystem.utilitarios.Utilitario;
 
 public class IgJanelaPrincipal extends JFrame {
 
@@ -47,12 +55,14 @@ public class IgJanelaPrincipal extends JFrame {
 	private JPanel graficoPanel;
 	private JButton cadastrarButton;
 	private JButton consultarButton;
+	private JTable bovinosTabel;
 	
 	private DAO<Bovino> bovinoDAO;
 	private List<Bovino> bovinoList;
 	private int totalBovinos;
 	private int totalMachos;
 	private int totalFemeas;
+	
 
 	public IgJanelaPrincipal(DAO<Bovino> bovinoDAO) {
 		this.bovinoDAO = bovinoDAO;
@@ -69,7 +79,7 @@ public class IgJanelaPrincipal extends JFrame {
 		setTitle("Agro System™");
 
 		// Define o tamanho da janela
-		setBounds(100, 100, 1000, 521);
+		setBounds(100, 100, 1200, 521);
 		setResizable(false);
 		setVisible(true);
 		contentPane = new JPanel();
@@ -131,18 +141,24 @@ public class IgJanelaPrincipal extends JFrame {
 		centralPanel.setBackground(new Color(255, 255, 255));
 		centralPanel.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192)), "Bovinos",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
-		centralPanel.setBounds(6, 65, 972, 383);
+		centralPanel.setBounds(6, 65, 1172, 383);
 		contentPane.add(centralPanel);
 		centralPanel.setLayout(null);
 
 		graficoPanel = new JPanel();
-		graficoPanel.setBounds(539, 55, 427, 304);
+		graficoPanel.setBounds(758, 55, 408, 304);
 		centralPanel.add(graficoPanel);
 		graficoPanel.setLayout(new BorderLayout(0, 0));
 
 		tabelaPanel = new JPanel();
-		tabelaPanel.setBounds(6, 55, 527, 304);
+		tabelaPanel.setBackground(new Color(255, 255, 255));
+		tabelaPanel.setBounds(6, 55, 747, 304);
 		centralPanel.add(tabelaPanel);
+		tabelaPanel.setLayout(new BorderLayout(0, 0));
+		
+		bovinosTabel = criarTabela();
+		tabelaPanel.add(bovinosTabel);
+		tabelaPanel.add(criarTabelaBovinos(bovinoList));
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 255, 255));
@@ -169,7 +185,7 @@ public class IgJanelaPrincipal extends JFrame {
 		racaComboBox.setBounds(39, 6, 95, 21);
 		panel.add(racaComboBox);
 		racaComboBox.setModel(new DefaultComboBoxModel<>(racas));
-		racaComboBox.setSelectedIndex(3);
+		racaComboBox.setSelectedIndex(4);
 		racaComboBox.setMaximumRowCount(5);
 		racaComboBox.setBorder(null);
 		racaComboBox.setBackground(Color.WHITE);
@@ -182,7 +198,7 @@ public class IgJanelaPrincipal extends JFrame {
 
 		JPanel InferiorPanel = new JPanel();
 		InferiorPanel.setBackground(new Color(255, 255, 255));
-		InferiorPanel.setBounds(0, 448, 984, 34);
+		InferiorPanel.setBounds(0, 448, 1184, 34);
 		contentPane.add(InferiorPanel);
 
 		consultarButton = new JButton("Pesquisar Bovino...");
@@ -202,26 +218,31 @@ public class IgJanelaPrincipal extends JFrame {
 		gl_InferiorPanel.setHorizontalGroup(
 			gl_InferiorPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_InferiorPanel.createSequentialGroup()
-					.addGap(737)
+					.addGap(933)
 					.addComponent(cadastrarButton, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-					.addGap(1)
-					.addComponent(consultarButton, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(consultarButton, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
 		);
 		gl_InferiorPanel.setVerticalGroup(
 			gl_InferiorPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_InferiorPanel.createSequentialGroup()
 					.addGap(3)
-					.addComponent(cadastrarButton, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_InferiorPanel.createSequentialGroup()
-					.addGap(2)
-					.addComponent(consultarButton))
+					.addGroup(gl_InferiorPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(consultarButton)
+						.addComponent(cadastrarButton, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
 		);
 		InferiorPanel.setLayout(gl_InferiorPanel);
 		
-		atualizarValoresLabels();
+		//Atualiza os valores dos componentes exibidos na GUI.
+		atualizarComponentes();
 		
-		graficoEmBarras();
-
+		//Atualiza os componentes de acordo com a raça selecionada no JComboBox.
+		racaComboBox.addItemListener((itemEvent) -> atualizarComponentes(itemEvent));
+		
+		//Atualiza os componentes de acordo com o sexo selecionado no JComboBox.
+		sexoComboBox.addItemListener((itemEvent) -> atualizarComponentes(itemEvent));
+		
 		// Fecha a conexão com banco de dados quando o programa for finalizado
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -237,6 +258,51 @@ public class IgJanelaPrincipal extends JFrame {
 		});
 	}//IgJanelaPrincipal()
 	
+	private void atualizarComponentes() {
+		List<Bovino> bovinoLista = bovinoList;
+		
+		if (bovinoList.isEmpty()) {
+			consultarButton.setEnabled(false);
+		}
+		else {
+			consultarButton.setEnabled(true);
+		}
+		
+		if (!racaComboBox.getSelectedItem().equals("Todas")) {
+			bovinoLista = bovinoLista.stream().filter((b) -> b.getRaca()
+			.equals(Raca.converterStringParaRaca(racaComboBox.getSelectedItem().toString())))
+			.collect(Collectors.toList());
+		}
+		
+		if (!sexoComboBox.getSelectedItem().equals("Todas")) {
+			bovinoLista = bovinoLista.stream().filter((b) -> b.getSexo()
+			.equals(Sexo.converterStringParaSexo(sexoComboBox.getSelectedItem().toString())))
+			.collect(Collectors.toList());
+		}
+		graficoEmBarras();
+		
+		atualizarTabela(bovinoLista);
+		
+		// Remover o JScrollPane antigo da tabelaPanel
+		tabelaPanel.remove(0);
+
+		// Adicionar o novo JScrollPane à tabelaPanel
+		tabelaPanel.add(atualizarTabela(bovinoLista));
+				
+		// Atualizar a interface
+		tabelaPanel.revalidate();
+		tabelaPanel.repaint();
+		
+		atualizarValoresLabels();
+	}//atualizarComponentes()
+	
+	
+	private void atualizarComponentes(ItemEvent itemEvent) {
+		if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+			atualizarComponentes();
+		}
+	}//atualizarComponentes()
+	
 	private void atualizarValoresLabels() {
 		valorTotalBovinosLabel.setText(String.valueOf(totalBovinos));
 		valorTotalMachosLabel.setText(String.valueOf(totalMachos));
@@ -249,4 +315,77 @@ public class IgJanelaPrincipal extends JFrame {
 		tabelaPanel.revalidate();
 		tabelaPanel.repaint();
 	}//graficoEmBarras()
+	
+	
+	private JTable criarTabela() {
+		// Criar os nomes das colunas
+		String[] colunaNomes = {"Brinco", "Nome", "Situação", "Sexo", "Raça","Brinco Mãe", "Brinco Pai"};
+
+		// Criar a tabela com o modelo criado
+		JTable tabela = new JTable(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Brinco", "Nome", "Situa\u00E7\u00E3o", "Sexo", "Ra\u00E7a", "Data Nascimento"
+			}
+		));
+
+		// Impedir reordenação das colunas
+		tabela.getTableHeader().setReorderingAllowed(false);
+
+		// Configurar o estilo da tabela
+		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// Preencher toda a altura da tabela
+		tabela.setFillsViewportHeight(true);
+
+		// Definir cor de fundo da tabela
+		tabela.setBackground(Color.WHITE);
+
+		// Remover sombra da linha quando uma célula é selecionada
+		tabela.setRowSelectionAllowed(true);
+
+		// Definir cor de fundo do cabeçalho da tabela
+		tabela.getTableHeader().setBackground(Color.WHITE);
+
+		// Adicionar bordas entre as colunas e linhas da tabela
+		tabela.setShowGrid(true);
+		tabela.setGridColor(Color.LIGHT_GRAY);
+		
+		tabela.getColumnModel().getColumn(0).setPreferredWidth(130);
+		tabela.getColumnModel().getColumn(1).setPreferredWidth(36);
+		tabela.getColumnModel().getColumn(2).setPreferredWidth(40);
+		tabela.getColumnModel().getColumn(3).setPreferredWidth(20);
+
+		return tabela;
+	}//criarTabela()
+	
+	public JScrollPane criarTabelaBovinos(List<Bovino> bovinoList) {
+		JScrollPane scrollPane = atualizarTabela(bovinoList);
+		return scrollPane;
+	}//criarTabelaBovinos()
+	
+	private JScrollPane atualizarTabela(List<Bovino> bovinoList) {
+		DefaultTableModel model = (DefaultTableModel) bovinosTabel.getModel();
+		
+		// Limpar dados existentes da tabela
+		model.setRowCount(0);
+		
+		for(Bovino bovino : bovinoList) {
+			Object[] rowData = {
+					bovino.getBrinco(),
+					bovino.getNome(),
+					bovino.getSituacao().toString(),
+					bovino.getSexo().toString(),
+					bovino.getRaca().toString(),
+					bovino.getDataNascimento().format(Utilitario.DIA_MES_ANO_FORMATTER),
+					
+			};
+			model.addRow(rowData);
+		}
+		
+		// Criar um JScrollPane para permitir a rolagem da tabela
+		JScrollPane scrollPane = new JScrollPane(bovinosTabel);
+				
+		return scrollPane;
+	}//atualizarTabela()
 }
