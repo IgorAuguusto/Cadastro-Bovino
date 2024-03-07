@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaQuery;
 
 public class DAO<T> implements AutoCloseable {
@@ -12,7 +13,7 @@ public class DAO<T> implements AutoCloseable {
 	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
 	
-	public DAO(Class<T> classe) {
+	public DAO(Class<T> classe) throws PersistenceException {
 		this.classe = classe;
 		entityManagerFactory = Persistence.createEntityManagerFactory("agrosystem");
 		entityManager = entityManagerFactory.createEntityManager();
@@ -42,11 +43,8 @@ public class DAO<T> implements AutoCloseable {
 	
 	public List<T> listaTodos(){
 		CriteriaQuery<T> query = entityManager.getCriteriaBuilder().createQuery(classe);
-		
 		query.select(query.from(classe));
-		
 		List<T> list = entityManager.createQuery(query).getResultList();
-		
 		return list;
 	}//listaTodos()
 
@@ -55,4 +53,4 @@ public class DAO<T> implements AutoCloseable {
 		entityManager.close();
 		entityManagerFactory.close();
 	}//close()
-}
+}//DAO

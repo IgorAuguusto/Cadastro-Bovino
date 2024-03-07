@@ -6,6 +6,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.border.TitledBorder;
+
+import agrosystem.dao.DAO;
+import agrosystem.dominio.Bovino;
+
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JButton;
@@ -21,7 +25,7 @@ public class IgJanelaPrincipal extends JFrame {
 	private JPanel contentPane;
 
 	
-	public IgJanelaPrincipal() {
+	public IgJanelaPrincipal(DAO<Bovino> bovinoDAO) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(IgJanelaPrincipal.class.getResource("/agrosystem/imagens/icon.png")));
 		setTitle("Agro System™");
 		

@@ -4,9 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Locale;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -28,13 +28,11 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import agrosystem.dominio.Bovino;
-
 
 public class IgGraficoBarras {
 	
-	public static JPanel gerarGraficoBarras(List<Bovino> boivinoList) {
-		if (boivinoList.isEmpty()) {
+	public static JPanel gerarGraficoBarras(Integer numeroTotalBovinos, Integer numeroDeBovinosMachos, Integer numeroBovinosFemeas) {
+		if (numeroTotalBovinos == 0) {
        	 final JPanel contentPanel = new JPanel();
        	    contentPanel.setBackground(new Color(255, 255, 255));
        	    contentPanel.setBounds(100, 100, 450, 300);
@@ -55,7 +53,7 @@ public class IgGraficoBarras {
 
        	    JLabel imagemLabel = new JLabel("");
        	    imagemLabel.setHorizontalAlignment(SwingConstants.CENTER);
-       	    //imagemLabel.setIcon(new ImageIcon(IgGraficoPizza.class.getResource("/budgetbuddy/gui/icon/budgetBuddy.png")));
+       	    imagemLabel.setIcon(new ImageIcon("/agrosystem/src/main/java/agrosystem/imagens/boi.png"));
 
        	    contentPanel.add(imagemLabel, BorderLayout.NORTH);
 
@@ -67,13 +65,13 @@ public class IgGraficoBarras {
 
 		Locale.setDefault(Locale.US);
 
-		//dataset.addValue(valorAlimentacao / valorTotalReceitasMes * 100, ALIMENTACAO, "");
-		//dataset.setValue(valorEducacao / valorTotalReceitasMes * 100, EDUCACAO, "");
+		dataset.addValue(numeroDeBovinosMachos / numeroTotalBovinos * 100, "Macho", "");
+		dataset.setValue(numeroBovinosFemeas / numeroTotalBovinos * 100, "Fêmea", "");
 
 		// Criação do gráfico de barras
 		JFreeChart chart = ChartFactory.createBarChart(
 				"",  // Título do gráfico
-				"Porcentagens das despesas em relação a receita", // Rótulo do eixo x
+				"Proporção sexualidade Bovinos", // Rótulo do eixo x
 				"",            // Rótulo do eixo y
 				dataset,              // Dados
 				PlotOrientation.VERTICAL,
