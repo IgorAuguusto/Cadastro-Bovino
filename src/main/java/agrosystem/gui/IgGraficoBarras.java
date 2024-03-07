@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
@@ -28,10 +29,13 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import agrosystem.dominio.Bovino;
+import agrosystem.dominio.enumeracao.Raca;
+
 
 public class IgGraficoBarras {
 	
-	public static JPanel gerarGraficoBarras(Integer numeroTotalBovinos, Integer numeroDeBovinosMachos, Integer numeroBovinosFemeas) {
+	public static JPanel gerarGraficoBarras(List<Bovino> bovinoList, int numeroTotalBovinos) {
 		if (numeroTotalBovinos == 0) {
        	 final JPanel contentPanel = new JPanel();
        	    contentPanel.setBackground(new Color(255, 255, 255));
@@ -53,7 +57,7 @@ public class IgGraficoBarras {
 
        	    JLabel imagemLabel = new JLabel("");
        	    imagemLabel.setHorizontalAlignment(SwingConstants.CENTER);
-       	    imagemLabel.setIcon(new ImageIcon("/agrosystem/src/main/java/agrosystem/imagens/boi.png"));
+       	    imagemLabel.setIcon(new ImageIcon(IgGraficoBarras.class.getResource("/agrosystem/imagens/icon.png")));
 
        	    contentPanel.add(imagemLabel, BorderLayout.NORTH);
 
@@ -65,13 +69,16 @@ public class IgGraficoBarras {
 
 		Locale.setDefault(Locale.US);
 
-		dataset.addValue(numeroDeBovinosMachos / numeroTotalBovinos * 100, "Macho", "");
-		dataset.setValue(numeroBovinosFemeas / numeroTotalBovinos * 100, "Fêmea", "");
+		dataset.addValue(totalDeBovisnosDeDeterminadaRaca(bovinoList, Raca.GIR) / numeroTotalBovinos * 100, Raca.GIR.getRaca(), "");
+		dataset.addValue(totalDeBovisnosDeDeterminadaRaca(bovinoList, Raca.GIROLANDO) / numeroTotalBovinos * 100, Raca.GIROLANDO.getRaca(), "");
+		dataset.addValue(totalDeBovisnosDeDeterminadaRaca(bovinoList, Raca.HOLANDES) / numeroTotalBovinos * 100, Raca.HOLANDES.getRaca(), "");
+		dataset.addValue(totalDeBovisnosDeDeterminadaRaca(bovinoList, Raca.JERSEY) / numeroTotalBovinos * 100, Raca.JERSEY.getRaca(), "");
+	
 
 		// Criação do gráfico de barras
 		JFreeChart chart = ChartFactory.createBarChart(
 				"",  // Título do gráfico
-				"Proporção sexualidade Bovinos", // Rótulo do eixo x
+				"Raças cadastradas", // Rótulo do eixo x
 				"",            // Rótulo do eixo y
 				dataset,              // Dados
 				PlotOrientation.VERTICAL,
@@ -85,7 +92,9 @@ public class IgGraficoBarras {
 		BarRenderer renderer = (BarRenderer) plot.getRenderer();
 		renderer.setBarPainter(new StandardBarPainter());
 		renderer.setSeriesPaint(0, new Color(255, 192, 203));
-		renderer.setSeriesPaint(1, new Color(65, 105, 225));  
+		renderer.setSeriesPaint(1, new Color(150, 75, 0));
+		renderer.setSeriesPaint(0, new Color(128, 0, 128));
+		renderer.setSeriesPaint(0, new Color(255, 165, 0));
 		
 		// Definir largura máxima para as barras
 		double maxBarWidth = .1; 
@@ -122,4 +131,8 @@ public class IgGraficoBarras {
 		// Retorno do ChartPanel
 		return chartPanel;
 	}
+	
+	public static float totalDeBovisnosDeDeterminadaRaca(List<Bovino> bovinoList, Raca raca) {
+		return bovinoList.stream().filter(bovino -> bovino.getRaca().equals(raca)).toList().size();
+	}//totalDeBovisnosDeDeterminadaRaca()
 }

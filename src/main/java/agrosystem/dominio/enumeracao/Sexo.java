@@ -2,8 +2,8 @@ package agrosystem.dominio.enumeracao;
 
 public enum Sexo {
 	
-    MASCULINO("Masculino"),
-    FEMININO("Feminino");
+    MACHO("Macho"),
+    FEMEA("Fêmea");
 
     private String sexo;
 

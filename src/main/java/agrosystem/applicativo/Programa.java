@@ -24,6 +24,7 @@ public class Programa {
 			JOptionPane.showMessageDialog(null, "Erro ao se conectar ao banco de dados", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Erro inesperado", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}//agroSystem()
