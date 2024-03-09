@@ -1,5 +1,7 @@
 package agrosystem.applicativo;
 
+import java.util.Locale;
+
 import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -16,6 +18,7 @@ public class Programa {
 
 	private static void agroSystem() {
 		try {
+			Locale.setDefault(new Locale("pt", "BR"));
 			DAO<Bovino> bovinoDAO = new DAO<>(Bovino.class);
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			new IgJanelaPrincipal(bovinoDAO);

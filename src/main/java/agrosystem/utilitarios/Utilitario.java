@@ -9,5 +9,8 @@ public class Utilitario {
 	 */
 	public static final DateTimeFormatter DIA_MES_ANO_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	
+	public static final String BRINCO_PATTERN = "[a-zA-Z0-9]{8}";
+	
+	public static final String NOME_PATTERN = "[a-zA-Z0-9]{20}";
 
 }//Utilitario

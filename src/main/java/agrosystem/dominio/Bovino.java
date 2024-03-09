@@ -31,13 +31,14 @@ public class Bovino implements Serializable {
 	private Raca raca;
 	private LocalDate dataNascimento;
 	private LocalDate dataPrenhes;
+	private LocalDate dataProximoParto;
 	private LocalDate dataUltimoParto;
 	
 	public Bovino() {
 	}//Construtor
 	
 	public Bovino(String brinco, String nome, Situacao situacao, Sexo sexo, String brincoMae, String brincoPai,
-			Raca raca, LocalDate dataNascimento, LocalDate dataPrenhes, LocalDate dataUltimoParto) {
+			Raca raca, LocalDate dataNascimento, LocalDate dataPrenhes, LocalDate dataProximoParto, LocalDate dataUltimoParto) {
 		super();
 		this.brinco = brinco;
 		this.nome = nome;
@@ -48,11 +49,12 @@ public class Bovino implements Serializable {
 		this.raca = raca;
 		this.dataNascimento = dataNascimento;
 		this.dataPrenhes = dataPrenhes;
+		this.dataProximoParto = dataProximoParto;
 		this.dataUltimoParto = dataUltimoParto;
 	}//Construtor
 	
 	public Bovino(String brinco, String nome, String situacao, String sexo, String brincoMae, String brincoPai,
-			String raca, String dataNascimento, String dataPrenhes, String dataUltimoParto) {
+			String raca, String dataNascimento, String dataProximoParto, String dataPrenhes, String dataUltimoParto) {
 		this.brinco = brinco;
 		this.nome = nome;
 		this.situacao = Situacao.converterStringParaSituacao(situacao);
@@ -61,6 +63,7 @@ public class Bovino implements Serializable {
 		this.brincoPai = brincoPai;
 		this.raca = Raca.converterStringParaRaca(raca);
 		this.dataNascimento = LocalDate.parse(dataNascimento, Utilitario.DIA_MES_ANO_FORMATTER);
+		this.dataProximoParto = LocalDate.parse(dataProximoParto, Utilitario.DIA_MES_ANO_FORMATTER);
 		this.dataPrenhes = LocalDate.parse(dataPrenhes, Utilitario.DIA_MES_ANO_FORMATTER);;
 		this.dataUltimoParto = LocalDate.parse(dataUltimoParto, Utilitario.DIA_MES_ANO_FORMATTER);;
 	}//Construtor
@@ -145,6 +148,15 @@ public class Bovino implements Serializable {
 		this.dataPrenhes = dataPrenhes;
 	}//setDataPrenhes()
 	
+	
+	public LocalDate getDataProximoParto() {
+		return dataProximoParto;
+	}//getDataProximoParto()
+
+	public void setDataProximoParto(LocalDate dataProximoParto) {
+		this.dataProximoParto = dataProximoParto;
+	}//setDataProximoParto()
+
 	public LocalDate getDataUltimoParto() {
 		return dataUltimoParto;
 	}//getDataUltimoParto()

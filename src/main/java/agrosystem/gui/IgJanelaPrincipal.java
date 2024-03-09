@@ -57,7 +57,6 @@ public class IgJanelaPrincipal extends JFrame {
 	private JButton consultarButton;
 	private JTable bovinosTabel;
 	
-	private DAO<Bovino> bovinoDAO;
 	private List<Bovino> bovinoList;
 	private int totalBovinos;
 	private int totalMachos;
@@ -65,21 +64,20 @@ public class IgJanelaPrincipal extends JFrame {
 	
 
 	public IgJanelaPrincipal(DAO<Bovino> bovinoDAO) {
-		this.bovinoDAO = bovinoDAO;
 		this.bovinoList = bovinoDAO.listaTodos();
 		totalBovinos = bovinoList.size();
 		totalMachos = bovinoList.stream().filter( b -> b.getSexo() == Sexo.MACHO).toList().size();
 		totalFemeas = bovinoList.stream().filter( b -> b.getSexo() == Sexo.FEMEA).toList().size();
 
 		String[] racas = Raca.getRacas();
-		String[] sexo = { "Macho", "Fêmea", "Todas"};
+		String[] sexos = { "Macho", "Fêmea", "Todas"};
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(IgJanelaPrincipal.class.getResource("/agrosystem/imagens/icon.png")));
 		setTitle("Agro System™");
 
 		// Define o tamanho da janela
-		setBounds(100, 100, 1200, 521);
+		setBounds(100, 100, 1280, 521);
 		setResizable(false);
 		setVisible(true);
 		contentPane = new JPanel();
@@ -101,7 +99,7 @@ public class IgJanelaPrincipal extends JFrame {
 		superiorPanel.add(bovinosTotalPanel);
 
 		bovinosTotalLabel = new JLabel("Total de Bovinos");
-		bovinosTotalLabel.setForeground(Color.BLUE);
+		bovinosTotalLabel.setForeground(new Color(150, 75, 0));
 		bovinosTotalLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 		bovinosTotalPanel.add(bovinosTotalLabel);
 
@@ -115,7 +113,7 @@ public class IgJanelaPrincipal extends JFrame {
 		superiorPanel.add(bovinosMachosTotalPanel);
 
 		bovinosTotalMachoLabel = new JLabel("Total de Machos");
-		bovinosTotalMachoLabel.setForeground(Color.BLUE);
+		bovinosTotalMachoLabel.setForeground(new Color(150, 75, 0));
 		bovinosTotalMachoLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 		bovinosMachosTotalPanel.add(bovinosTotalMachoLabel);
 
@@ -129,7 +127,7 @@ public class IgJanelaPrincipal extends JFrame {
 		superiorPanel.add(bovinosTotalFemeasPanel);
 
 		bovinosTotalFemeasLabel = new JLabel("Total de Fêmeas");
-		bovinosTotalFemeasLabel.setForeground(Color.BLUE);
+		bovinosTotalFemeasLabel.setForeground(new Color(150, 75, 0));
 		bovinosTotalFemeasLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 		bovinosTotalFemeasPanel.add(bovinosTotalFemeasLabel);
 
@@ -141,18 +139,18 @@ public class IgJanelaPrincipal extends JFrame {
 		centralPanel.setBackground(new Color(255, 255, 255));
 		centralPanel.setBorder(new TitledBorder(new LineBorder(new Color(192, 192, 192)), "Bovinos",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
-		centralPanel.setBounds(6, 65, 1172, 383);
+		centralPanel.setBounds(6, 65, 1252, 383);
 		contentPane.add(centralPanel);
 		centralPanel.setLayout(null);
 
 		graficoPanel = new JPanel();
-		graficoPanel.setBounds(758, 55, 408, 304);
+		graficoPanel.setBounds(838, 55, 408, 304);
 		centralPanel.add(graficoPanel);
 		graficoPanel.setLayout(new BorderLayout(0, 0));
 
 		tabelaPanel = new JPanel();
 		tabelaPanel.setBackground(new Color(255, 255, 255));
-		tabelaPanel.setBounds(6, 55, 747, 304);
+		tabelaPanel.setBounds(6, 55, 826, 304);
 		centralPanel.add(tabelaPanel);
 		tabelaPanel.setLayout(new BorderLayout(0, 0));
 		
@@ -169,7 +167,7 @@ public class IgJanelaPrincipal extends JFrame {
 		sexoComboBox = new JComboBox<String>();
 		sexoComboBox.setBounds(179, 6, 95, 21);
 		panel.add(sexoComboBox);
-		sexoComboBox.setModel(new DefaultComboBoxModel<>(sexo));
+		sexoComboBox.setModel(new DefaultComboBoxModel<>(sexos));
 		sexoComboBox.setSelectedIndex(2);
 		sexoComboBox.setMaximumRowCount(3);
 		sexoComboBox.setBorder(null);
@@ -198,7 +196,7 @@ public class IgJanelaPrincipal extends JFrame {
 
 		JPanel InferiorPanel = new JPanel();
 		InferiorPanel.setBackground(new Color(255, 255, 255));
-		InferiorPanel.setBounds(0, 448, 1184, 34);
+		InferiorPanel.setBounds(0, 448, 1264, 34);
 		contentPane.add(InferiorPanel);
 
 		consultarButton = new JButton("Pesquisar Bovino...");
@@ -218,7 +216,7 @@ public class IgJanelaPrincipal extends JFrame {
 		gl_InferiorPanel.setHorizontalGroup(
 			gl_InferiorPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_InferiorPanel.createSequentialGroup()
-					.addGap(933)
+					.addGap(1013)
 					.addComponent(cadastrarButton, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(consultarButton, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
@@ -230,9 +228,11 @@ public class IgJanelaPrincipal extends JFrame {
 					.addGap(3)
 					.addGroup(gl_InferiorPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(consultarButton)
-						.addComponent(cadastrarButton, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(cadastrarButton)))
 		);
 		InferiorPanel.setLayout(gl_InferiorPanel);
+		
+		
 		
 		//Atualiza os valores dos componentes exibidos na GUI.
 		atualizarComponentes();
@@ -242,6 +242,11 @@ public class IgJanelaPrincipal extends JFrame {
 		
 		//Atualiza os componentes de acordo com o sexo selecionado no JComboBox.
 		sexoComboBox.addItemListener((itemEvent) -> atualizarComponentes(itemEvent));
+		
+		//Abre a janela de Cadastro.
+		cadastrarButton.addActionListener((e) -> new IgCadastro(IgJanelaPrincipal.this, bovinoDAO));
+		
+		consultarButton.addActionListener((e) -> new IgPesquisa(IgJanelaPrincipal.this, bovinosTabel, bovinoList));
 		
 		// Fecha a conexão com banco de dados quando o programa for finalizado
 		addWindowListener(new WindowAdapter() {
@@ -318,17 +323,24 @@ public class IgJanelaPrincipal extends JFrame {
 	
 	
 	private JTable criarTabela() {
-		// Criar os nomes das colunas
-		String[] colunaNomes = {"Brinco", "Nome", "Situação", "Sexo", "Raça","Brinco Mãe", "Brinco Pai"};
-
+		
 		// Criar a tabela com o modelo criado
 		JTable tabela = new JTable(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Brinco", "Nome", "Situa\u00E7\u00E3o", "Sexo", "Ra\u00E7a", "Data Nascimento"
-			}
-		));
+		        new Object[][] {
+		        },
+		        new String[] {
+		            "Brinco", "Nome", "Situação", "Sexo", "Brinco Mãe",  "Brinco Pai", "Raça", "Nascimento", 
+		            "Prenhês", "Próximo P", "Último P"
+		        }
+		    )) {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+		        public boolean isCellEditable(int row, int column) {
+		            // Todas as células não são editáveis
+		            return false;
+		        }
+		    };
 
 		// Impedir reordenação das colunas
 		tabela.getTableHeader().setReorderingAllowed(false);
@@ -351,10 +363,9 @@ public class IgJanelaPrincipal extends JFrame {
 		tabela.setShowGrid(true);
 		tabela.setGridColor(Color.LIGHT_GRAY);
 		
-		tabela.getColumnModel().getColumn(0).setPreferredWidth(130);
-		tabela.getColumnModel().getColumn(1).setPreferredWidth(36);
-		tabela.getColumnModel().getColumn(2).setPreferredWidth(40);
-		tabela.getColumnModel().getColumn(3).setPreferredWidth(20);
+		tabela.getColumnModel().getColumn(3).setPreferredWidth(40);
+		tabela.getColumnModel().getColumn(6).setPreferredWidth(50);
+		tabela.getColumnModel().getColumn(8).setPreferredWidth(70);
 
 		return tabela;
 	}//criarTabela()
@@ -375,9 +386,14 @@ public class IgJanelaPrincipal extends JFrame {
 					bovino.getBrinco(),
 					bovino.getNome(),
 					bovino.getSituacao().toString(),
-					bovino.getSexo().toString(),
+					bovino.getSexo() == Sexo.MACHO ? "M" : "F",
+					bovino.getBrincoPai(),
+					bovino.getBrincoPai(),
 					bovino.getRaca().toString(),
 					bovino.getDataNascimento().format(Utilitario.DIA_MES_ANO_FORMATTER),
+					bovino.getDataPrenhes().format(Utilitario.DIA_MES_ANO_FORMATTER),
+					bovino.getDataProximoParto().format(Utilitario.DIA_MES_ANO_FORMATTER),
+					bovino.getDataUltimoParto().format(Utilitario.DIA_MES_ANO_FORMATTER)
 					
 			};
 			model.addRow(rowData);
