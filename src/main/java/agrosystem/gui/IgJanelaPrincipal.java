@@ -58,17 +58,9 @@ public class IgJanelaPrincipal extends JFrame {
 	private JTable bovinosTabel;
 	
 	private List<Bovino> bovinoList;
-	private int totalBovinos;
-	private int totalMachos;
-	private int totalFemeas;
 	
-
 	public IgJanelaPrincipal(DAO<Bovino> bovinoDAO) {
 		this.bovinoList = bovinoDAO.listaTodos();
-		totalBovinos = bovinoList.size();
-		totalMachos = bovinoList.stream().filter( b -> b.getSexo() == Sexo.MACHO).toList().size();
-		totalFemeas = bovinoList.stream().filter( b -> b.getSexo() == Sexo.FEMEA).toList().size();
-
 		String[] racas = Raca.getRacas();
 		String[] sexos = { "Macho", "Fêmea", "Todos"};
 
@@ -240,11 +232,7 @@ public class IgJanelaPrincipal extends JFrame {
 		sexoComboBox.addItemListener((itemEvent) -> atualizarComponentes(itemEvent));
 		
 		//Abre a janela de Cadastro.
-		cadastrarButton.addActionListener((e) -> {
-		    // Instanciar a janela de cadastro
-		    new IgCadastro(IgJanelaPrincipal.this, bovinoDAO, bovinoList);
-		    atualizarComponentes();
-		});
+		cadastrarButton.addActionListener((e) -> cadastrarBovinos(bovinoDAO));
 		
 		//Abre a janela de pesquisa
 		consultarButton.addActionListener((e) -> new IgPesquisa(IgJanelaPrincipal.this, bovinosTabel, bovinoList));
@@ -274,6 +262,11 @@ public class IgJanelaPrincipal extends JFrame {
 		});
 	}//IgJanelaPrincipal()
 	
+	private void cadastrarBovinos(DAO<Bovino> bovinoDAO) {
+		 new IgCadastro(IgJanelaPrincipal.this, bovinoDAO, bovinoList);
+		 atualizarComponentes();
+	}//cadastrarBovinos()
+
 	private void atualizarComponentes() {
 		List<Bovino> bovinoLista = bovinoList;
 		
@@ -320,6 +313,10 @@ public class IgJanelaPrincipal extends JFrame {
 	}//atualizarComponentes()
 	
 	private void atualizarValoresLabels() {
+		int totalBovinos = bovinoList.size();
+		int totalMachos = bovinoList.stream().filter( b -> b.getSexo() == Sexo.MACHO).toList().size();
+		int totalFemeas = bovinoList.stream().filter( b -> b.getSexo() == Sexo.FEMEA).toList().size();
+
 		valorTotalBovinosLabel.setText(String.valueOf(totalBovinos));
 		valorTotalMachosLabel.setText(String.valueOf(totalMachos));
 		valorTotalFemeasLabel.setText(String.valueOf(totalFemeas));
@@ -327,7 +324,10 @@ public class IgJanelaPrincipal extends JFrame {
 	
 	
 	private void graficoEmBarras() {
-		graficoPanel.add(IgGraficoBarras.gerarGraficoBarras(bovinoList, totalBovinos));
+		if (graficoPanel.getComponentCount() > 0) {
+			graficoPanel.remove(0);
+		}
+		graficoPanel.add(IgGraficoBarras.gerarGraficoBarras(bovinoList, bovinoList.size()));
 		tabelaPanel.revalidate();
 		tabelaPanel.repaint();
 	}//graficoEmBarras()
@@ -399,7 +399,7 @@ public class IgJanelaPrincipal extends JFrame {
 					bovino.getSituacao().toString(),
 					bovino.getSexo() == Sexo.MACHO ? "M" : "F",
 					bovino.getBrincoPai(),
-					bovino.getBrincoPai(),
+					bovino.getBrincoMae(),
 					bovino.getRaca().toString(),
 					bovino.getDataNascimento().format(Utilitario.DIA_MES_ANO_FORMATTER),
 					bovino.getDataPrenhes() != null ? bovino.getDataPrenhes().format(Utilitario.DIA_MES_ANO_FORMATTER) : "",
