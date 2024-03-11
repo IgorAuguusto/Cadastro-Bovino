@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -70,7 +70,7 @@ public class IgJanelaPrincipal extends JFrame {
 		totalFemeas = bovinoList.stream().filter( b -> b.getSexo() == Sexo.FEMEA).toList().size();
 
 		String[] racas = Raca.getRacas();
-		String[] sexos = { "Macho", "Fêmea", "Todas"};
+		String[] sexos = { "Macho", "Fêmea", "Todos"};
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(IgJanelaPrincipal.class.getResource("/agrosystem/imagens/icon.png")));
@@ -205,10 +205,6 @@ public class IgJanelaPrincipal extends JFrame {
 		consultarButton.setBackground(Color.WHITE);
 
 		cadastrarButton = new JButton("Cadastrar...");
-		cadastrarButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		cadastrarButton.setMnemonic(KeyEvent.VK_C);
 		cadastrarButton.setFont(new Font("SansSerif", Font.PLAIN, 11));
 		cadastrarButton.setBackground(Color.WHITE);
@@ -244,9 +240,24 @@ public class IgJanelaPrincipal extends JFrame {
 		sexoComboBox.addItemListener((itemEvent) -> atualizarComponentes(itemEvent));
 		
 		//Abre a janela de Cadastro.
-		cadastrarButton.addActionListener((e) -> new IgCadastro(IgJanelaPrincipal.this, bovinoDAO));
+		cadastrarButton.addActionListener((e) -> {
+		    // Instanciar a janela de cadastro
+		    new IgCadastro(IgJanelaPrincipal.this, bovinoDAO, bovinoList);
+		    atualizarComponentes();
+		});
 		
+		//Abre a janela de pesquisa
 		consultarButton.addActionListener((e) -> new IgPesquisa(IgJanelaPrincipal.this, bovinosTabel, bovinoList));
+		
+		//Atualiza os componentes quando a janela volta para o foco.
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				atualizarComponentes();
+			}
+		});
+		
+		
 		
 		// Fecha a conexão com banco de dados quando o programa for finalizado
 		addWindowListener(new WindowAdapter() {
@@ -279,7 +290,7 @@ public class IgJanelaPrincipal extends JFrame {
 			.collect(Collectors.toList());
 		}
 		
-		if (!sexoComboBox.getSelectedItem().equals("Todas")) {
+		if (!sexoComboBox.getSelectedItem().equals("Todos")) {
 			bovinoLista = bovinoLista.stream().filter((b) -> b.getSexo()
 			.equals(Sexo.converterStringParaSexo(sexoComboBox.getSelectedItem().toString())))
 			.collect(Collectors.toList());
@@ -364,7 +375,7 @@ public class IgJanelaPrincipal extends JFrame {
 		tabela.setGridColor(Color.LIGHT_GRAY);
 		
 		tabela.getColumnModel().getColumn(3).setPreferredWidth(40);
-		tabela.getColumnModel().getColumn(6).setPreferredWidth(50);
+		tabela.getColumnModel().getColumn(6).setPreferredWidth(70);
 		tabela.getColumnModel().getColumn(8).setPreferredWidth(70);
 
 		return tabela;
@@ -391,9 +402,9 @@ public class IgJanelaPrincipal extends JFrame {
 					bovino.getBrincoPai(),
 					bovino.getRaca().toString(),
 					bovino.getDataNascimento().format(Utilitario.DIA_MES_ANO_FORMATTER),
-					bovino.getDataPrenhes().format(Utilitario.DIA_MES_ANO_FORMATTER),
-					bovino.getDataProximoParto().format(Utilitario.DIA_MES_ANO_FORMATTER),
-					bovino.getDataUltimoParto().format(Utilitario.DIA_MES_ANO_FORMATTER)
+					bovino.getDataPrenhes() != null ? bovino.getDataPrenhes().format(Utilitario.DIA_MES_ANO_FORMATTER) : "",
+					bovino.getDataPrenhes() != null ? bovino.getDataPrenhes().plusMonths(9).format(Utilitario.DIA_MES_ANO_FORMATTER) : "",
+					bovino.getDataUltimoParto() != null ? bovino.getDataUltimoParto().format(Utilitario.DIA_MES_ANO_FORMATTER) : ""
 					
 			};
 			model.addRow(rowData);

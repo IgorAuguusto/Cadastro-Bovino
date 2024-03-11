@@ -176,7 +176,7 @@ public class IgPesquisa extends JDialog {
 		}
 		
 		if (indice == 0) {
-			JOptionPane.showMessageDialog(this, "Nenhuma Bovino foi encontrada", "Pesquesa Bovino", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Nenhum Bovino foi encontrada", "Pesquesa Bovino", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}//pesquisarBovinos()
 }//IgPesquisa

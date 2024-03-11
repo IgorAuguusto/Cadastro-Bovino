@@ -1,6 +1,7 @@
 package agrosystem.dominio;
 
 import java.io.Serializable;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -31,14 +32,13 @@ public class Bovino implements Serializable {
 	private Raca raca;
 	private LocalDate dataNascimento;
 	private LocalDate dataPrenhes;
-	private LocalDate dataProximoParto;
 	private LocalDate dataUltimoParto;
 	
 	public Bovino() {
 	}//Construtor
 	
 	public Bovino(String brinco, String nome, Situacao situacao, Sexo sexo, String brincoMae, String brincoPai,
-			Raca raca, LocalDate dataNascimento, LocalDate dataPrenhes, LocalDate dataProximoParto, LocalDate dataUltimoParto) {
+			Raca raca, LocalDate dataNascimento, LocalDate dataPrenhes, LocalDate dataUltimoParto) {
 		super();
 		this.brinco = brinco;
 		this.nome = nome;
@@ -49,12 +49,11 @@ public class Bovino implements Serializable {
 		this.raca = raca;
 		this.dataNascimento = dataNascimento;
 		this.dataPrenhes = dataPrenhes;
-		this.dataProximoParto = dataProximoParto;
 		this.dataUltimoParto = dataUltimoParto;
 	}//Construtor
 	
 	public Bovino(String brinco, String nome, String situacao, String sexo, String brincoMae, String brincoPai,
-			String raca, String dataNascimento, String dataProximoParto, String dataPrenhes, String dataUltimoParto) {
+			String raca, String dataNascimento, String dataPrenhes, String dataUltimoParto) {
 		this.brinco = brinco;
 		this.nome = nome;
 		this.situacao = Situacao.converterStringParaSituacao(situacao);
@@ -63,7 +62,6 @@ public class Bovino implements Serializable {
 		this.brincoPai = brincoPai;
 		this.raca = Raca.converterStringParaRaca(raca);
 		this.dataNascimento = LocalDate.parse(dataNascimento, Utilitario.DIA_MES_ANO_FORMATTER);
-		this.dataProximoParto = LocalDate.parse(dataProximoParto, Utilitario.DIA_MES_ANO_FORMATTER);
 		this.dataPrenhes = LocalDate.parse(dataPrenhes, Utilitario.DIA_MES_ANO_FORMATTER);;
 		this.dataUltimoParto = LocalDate.parse(dataUltimoParto, Utilitario.DIA_MES_ANO_FORMATTER);;
 	}//Construtor
@@ -81,6 +79,9 @@ public class Bovino implements Serializable {
 	}//getBrinco()
 	
 	public void setBrinco(String brinco) {
+		if (!brinco.matches(Utilitario.BRINCO_PATTERN)) {
+			throw new IllegalArgumentException("Brinco inválido. Deve conter exatamente 8 caracteres alfanuméricosn.");
+		}
 		this.brinco = brinco;
 	}//setBrinco()
 	
@@ -88,7 +89,10 @@ public class Bovino implements Serializable {
 		return nome;
 	}//getNome()
 	
-	public void setNome(String nome) {
+	public void setNome(String nome) throws IllegalArgumentException {
+		if (!nome.matches(Utilitario.NOME_PATTERN)) {
+			throw new IllegalArgumentException("Nome inválido");
+		}
 		this.nome = nome;
 	}//setNome()
 	
@@ -113,6 +117,12 @@ public class Bovino implements Serializable {
 	}//getBrincoMae()
 	
 	public void setBrincoMae(String brincoMae) {
+		if (brincoMae.isBlank()) {
+			this.brincoMae = brincoMae;
+		}
+		else if (!brincoMae.matches(Utilitario.BRINCO_PATTERN)) {
+			throw new IllegalArgumentException("Brinco Mãe inválido");
+		}
 		this.brincoMae = brincoMae;
 	}//setBrincoMae()
 	
@@ -121,6 +131,12 @@ public class Bovino implements Serializable {
 	}//getBrincoPai()
 	
 	public void setBrincoPai(String brincoPai) {
+		if (brincoPai.isBlank()) {
+			this.brincoPai = brincoPai;
+		}
+		else if (!brincoPai.matches(Utilitario.BRINCO_PATTERN)) {
+			throw new IllegalArgumentException("Brinco Pai inválido");
+		}
 		this.brincoPai = brincoPai;
 	}//setBrincoPai()
 	
@@ -136,6 +152,13 @@ public class Bovino implements Serializable {
 		return dataNascimento;
 	}//getDataNascimento()
 	
+	public void setDataNascimentoString(String dataNascimento) {
+		if (!dataNascimento.matches(Utilitario.DATA_PATTERN)) {
+			 throw new DateTimeException("Data Nascimento Inválida, favor fornecer no padrão dd/MM/yyyy");
+		}
+		this.dataNascimento = LocalDate.parse(dataNascimento, Utilitario.DIA_MES_ANO_FORMATTER);
+	}//setDataNascimentoString()
+	
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}//setDataNascimento()
@@ -144,22 +167,36 @@ public class Bovino implements Serializable {
 		return dataPrenhes;
 	}//getDataPrenhes()
 	
+	public void setDataPrenhesString(String dataPrenhes) {
+		if (dataPrenhes.isBlank()) {
+			this.dataPrenhes = null;
+			return;
+		}
+		if (!dataPrenhes.matches(Utilitario.DATA_PATTERN)) {
+			 throw new DateTimeException("Data Prenhes Inválida, favor fornecer no padrão dd/MM/yyyy");
+		}
+		this.dataPrenhes = LocalDate.parse(dataPrenhes, Utilitario.DIA_MES_ANO_FORMATTER);
+	}//setDataNascimentoString()
+	
 	public void setDataPrenhes(LocalDate dataPrenhes) {
 		this.dataPrenhes = dataPrenhes;
 	}//setDataPrenhes()
 	
 	
-	public LocalDate getDataProximoParto() {
-		return dataProximoParto;
-	}//getDataProximoParto()
-
-	public void setDataProximoParto(LocalDate dataProximoParto) {
-		this.dataProximoParto = dataProximoParto;
-	}//setDataProximoParto()
-
 	public LocalDate getDataUltimoParto() {
 		return dataUltimoParto;
 	}//getDataUltimoParto()
+	
+	public void setDataUltimoPartoString(String dataUltimoParto) {
+		if (dataUltimoParto.isBlank()) {
+			this.dataUltimoParto = null;
+			return;
+		}
+		else if (!dataUltimoParto.matches(Utilitario.DATA_PATTERN)) {
+			 throw new DateTimeException("Data Ultimo Parto Inválida, favor fornecer no padrão dd/MM/yyyy");
+		}
+		this.dataPrenhes = LocalDate.parse(dataUltimoParto, Utilitario.DIA_MES_ANO_FORMATTER);
+	}//setDataNascimentoString(
 	
 	public void setDataUltimoParto(LocalDate dataUltimoParto) {
 		this.dataUltimoParto = dataUltimoParto;

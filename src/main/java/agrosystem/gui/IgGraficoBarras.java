@@ -114,8 +114,9 @@ public class IgGraficoBarras {
 		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		DecimalFormat decimalFormat = new DecimalFormat("0.00'%'");
 		rangeAxis.setNumberFormatOverride(decimalFormat);
-		double maxValue = rangeAxis.getUpperBound(); // Valor máximo atual do eixo y
-		rangeAxis.setRange(0, maxValue + 10); // Ajuste da escala com 10 unidades a mais
+		double maxValue = rangeAxis.getUpperBound(); 
+		// Ajuste da escala com 10 unidades a mais
+		rangeAxis.setRange(0, maxValue + 10); 
 
 		// Personalização dos rótulos dos valores acima das barras com formato personalizado
 		renderer.setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", decimalFormat));
@@ -128,11 +129,10 @@ public class IgGraficoBarras {
 		chartPanel.setDomainZoomable(false);
 		chartPanel.setRangeZoomable(false);
 
-		// Retorno do ChartPanel
 		return chartPanel;
-	}
+	}//JPanel()
 	
 	public static float totalDeBovisnosDeDeterminadaRaca(List<Bovino> bovinoList, Raca raca) {
 		return bovinoList.stream().filter(bovino -> bovino.getRaca().equals(raca)).toList().size();
 	}//totalDeBovisnosDeDeterminadaRaca()
-}
+}//IgGraficoBarras
